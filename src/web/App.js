@@ -4,6 +4,7 @@ import axios from "axios";
 import BarChart from "./components/BarChart/BarChart";
 import DoughnutChart from "./components/DoughnutChart/DoughnutChart";
 import "./App.scss";
+
 class App extends Component {
   state = {
     usernames: [],
