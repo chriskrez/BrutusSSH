@@ -2,28 +2,37 @@ import React, { Component, createRef } from "react";
 import Chart from "chart.js";
 import "./BarChart.scss";
 
+var defaults = [{name: "example", value: "5"}, {name: "example", value: "5"},{name: "example", value: "5"}];
+
 export default class BarChart extends Component {  
   constructor(props) {
     super(props);
     this.chartRef = createRef();
   }
 
+  returnDataNames = () => {
+    return this.props.data.length ? this.props.data.map((d) => d.name) : defaults.map((d) => d.name);
+  }
+
+  returnDataValues = () => {
+    return this.props.data.length ? this.props.data.map((d) => d.value) :  defaults.map((d) => d.value);
+  }
+
   componentDidUpdate = () => {
-    this.myChart.data.labels = this.props.data.map((d) => d.name);
-    this.myChart.data.datasets[0].data = this.props.data.map((d) => d.value);
+    this.myChart.data.labels = this.returnDataNames();
+    this.myChart.data.datasets[0].data = this.returnDataValues();
     this.myChart.update();
   };
 
   componentDidMount = () => {  
-    var defaults = [{name: "example", value: "5"}, {name: "example", value: "5"},{name: "example", value: "5"}];
     this.myChart = new Chart(this.chartRef.current, {
       type: "bar",
       data: {
-        labels: this.props.data.length ? this.props.data.map((d) => d.name) : defaults.map((d) => d.name),
+        labels: this.returnDataNames(),
         datasets: [
           {
             label: this.props.title,
-            data: this.props.data.length ? this.props.data.map((d) => d.value) : defaults.map((d) => d.value),
+            data: this.returnDataValues(),
             backgroundColor: [
               "#a8e0ff",
               "#36827F",
