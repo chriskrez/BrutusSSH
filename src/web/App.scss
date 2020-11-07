@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+
+  .Upload {
+    padding: 2%;
+  }
+
+  .Charts {
+    display: flex;
+    flex-direction: row;
+
+    &Bar,
+    &Doughnut {
+      padding: 2%;
+      width: 45%;
+    }
+  }
+}
