@@ -9,6 +9,7 @@ class App extends Component {
   state = {
     usernames: [],
     ips: [],
+    countries: [],
     selectedFile: null,
   };
 
@@ -27,12 +28,13 @@ class App extends Component {
       this.setState({
         usernames: res.data.usernames,
         ips: res.data.ips,
+        countries: res.data.countries
       });
     });
   };
 
   render() {
-    const { usernames, ips } = this.state;
+    const { usernames, ips, countries } = this.state;
 
     return (
       <div className="App">
@@ -48,6 +50,9 @@ class App extends Component {
           </div>
           <div className="ChartsDoughnut">
             <DoughnutChart data={ips} title={"Most common ips"} />
+          </div>
+          <div>
+            <DoughnutChart data={countries} title={"Countries"} />
           </div>
         </div>
       </div>

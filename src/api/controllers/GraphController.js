@@ -1,4 +1,4 @@
-const scripts = require("../scripts/extractOccurrences.js");
+const scripts = require("../scripts/extractData.js");
 
 const graphUsernames = (file) => {
   const usernames = scripts.extractUsernames(file);
@@ -28,15 +28,34 @@ const graphIps = (file) => {
   return data.slice(0, 10);
 };
 
+const graphCountries = async (ips) => {
+  const countries = await scripts.extractCountries(ips);
+  const data = [];
+
+  for (var obj in countries) {
+    data.push({ name: obj, value: countries[obj]});
+  }
+
+  data.sort((a, b) => {
+    return b.value - a.value;
+  });
+
+  console.log(data);
+
+  return data.slice(0, 10);
+}
+
 module.exports = {
-  upload: (req, res) => {
+  async upload (req, res) {
     const data = req.files.file.data;
     const usernames = graphUsernames(data);
     const ips = graphIps(data);
+    const countries = await graphCountries(ips);
 
     return res.send({
       usernames,
       ips,
+      countries,
     });
   },
 };

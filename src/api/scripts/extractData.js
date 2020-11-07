@@ -1,5 +1,5 @@
 const fs = require("fs");
-const filepath = "./scripts/logs.txt";
+const axios = require("axios");
 
 const extractOccurences = (discriminator, regexp, file) => {
   var occurences = {};
@@ -38,4 +38,21 @@ module.exports = {
 
     return occurences;
   },
+
+  async extractCountries(ips) {
+    var result = {};
+    for (ip in ips) {
+      const record = ips[ip];
+      let res = await axios.get("http://www.geoplugin.net/json.gp?ip=" + record.name);
+        var country = res.data.geoplugin_countryName;
+        if(result[country]) {
+          var oldValue = result[country];
+          result[country] = oldValue + record.value;
+        } else {
+          result[country] = record.value;
+        }
+    }
+
+    return result;
+  }
 };
