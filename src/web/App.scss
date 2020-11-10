@@ -1,6 +1,10 @@
 .App {
   text-align: center;
 
+  .Title {
+    padding-top: 1%;
+  }
+
   .Upload {
     padding: 2%;
   }
@@ -9,8 +13,9 @@
     display: flex;
     flex-direction: row;
 
-    &Bar,
-    &Doughnut {
+    &_usernames,
+    &_ips,
+    &_countries {
       padding: 2%;
       width: 45%;
     }

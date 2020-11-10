@@ -38,22 +38,23 @@ class App extends Component {
 
     return (
       <div className="App">
+        <div className="Title"> Logalyzer </div>
+        <div className="Charts">
+          <div className="Charts_usernames">
+            <BarChart data={usernames} title={"Username frequency"} />
+          </div>
+          <div className="Charts_ips">
+            <DoughnutChart data={ips} title={"Most common ips"} />
+          </div>
+          <div className="Charts_countries">
+            <DoughnutChart data={countries} title={"Countries"} />
+          </div>
+        </div>
         <div className="Upload">
           <input type="file" onChange={this.onChangeHandler} />
           <button type="button" onClick={this.onClickHandler}>
             Upload
           </button>
-        </div>
-        <div className="Charts">
-          <div className="ChartsBar">
-            <BarChart data={usernames} title={"Username frequency"} />
-          </div>
-          <div className="ChartsDoughnut">
-            <DoughnutChart data={ips} title={"Most common ips"} />
-          </div>
-          <div>
-            <DoughnutChart data={countries} title={"Countries"} />
-          </div>
         </div>
       </div>
     );
