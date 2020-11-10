@@ -40,8 +40,6 @@ const graphCountries = async (ips) => {
     return b.value - a.value;
   });
 
-  console.log(data);
-
   return data.slice(0, 10);
 }
 
