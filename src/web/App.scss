@@ -4,20 +4,4 @@
   .Title {
     padding-top: 1%;
   }
-
-  .Upload {
-    padding: 2%;
-  }
-
-  .Charts {
-    display: flex;
-    flex-direction: row;
-
-    &_usernames,
-    &_ips,
-    &_countries {
-      padding: 2%;
-      width: 45%;
-    }
-  }
 }

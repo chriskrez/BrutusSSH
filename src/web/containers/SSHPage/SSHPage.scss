@@ -1,0 +1,19 @@
+div > {
+  .Charts {
+    &_top {
+      display: flex;
+      flex-direction: row;
+      padding: 2%;
+      width: 45%;
+    }
+
+    &_bottom {
+      padding: 2%;
+      width: 65%;
+    }
+  }
+
+  .Upload {
+    padding: 2%;
+  }
+}
