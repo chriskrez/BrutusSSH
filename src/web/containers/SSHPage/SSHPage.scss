@@ -1,4 +1,18 @@
-div > {
+.Stats {
+  .Upload {
+    display: flex;
+    align-self: flex-start;
+    padding: 2%;
+
+    > text {
+      margin-right: 2rem;
+    }
+
+    > input {
+      width: 12rem;
+    }
+  }
+
   .Charts {
     &_top {
       display: flex;
@@ -10,10 +24,10 @@ div > {
     &_bottom {
       padding: 2%;
       width: 65%;
-    }
-  }
 
-  .Upload {
-    padding: 2%;
+      .chartjs-render-monitor {
+        padding-left: 15%;
+      }
+    }
   }
 }

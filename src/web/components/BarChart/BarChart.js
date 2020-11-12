@@ -1,6 +1,5 @@
 import React, { Component, createRef } from "react";
 import Chart from "chart.js";
-import "./BarChart.scss";
 
 var defaults = [{name: "example", value: "5"}, {name: "example", value: "5"},{name: "example", value: "5"}];
 

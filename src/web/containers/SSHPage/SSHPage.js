@@ -7,12 +7,12 @@ import LineChart from "../../components/LineChart/LineChart"
 import "./SSHPage.scss"
 
 export default class SSHPage extends Component {
-    state = {
-        usernames: [],
-        ips: [],
+    state = {        
         countries: [],
+        ips: [],
         selectedFile: null,
-    };
+        usernames: [],
+    }
     
     onChangeHandler = (event) => {
         var file = event.target.files[0];
@@ -24,7 +24,6 @@ export default class SSHPage extends Component {
     onClickHandler = () => {
         const data = new FormData();
         data.append("file", this.state.selectedFile);
-    
         axios.post("/api/graphs/upload", data).then((res) => {
             this.setState({
                 usernames: res.data.usernames,
@@ -38,7 +37,14 @@ export default class SSHPage extends Component {
         const { usernames, ips, countries } = this.state;
 
         return(
-            <div>
+            <div className="Stats">
+                <div className="Upload">
+                    <text>Upload your SSH log file!</text>
+                    <input type="file" onChange={this.onChangeHandler} />
+                    <button type="button" onClick={this.onClickHandler}>
+                        Upload
+                    </button>
+                </div>
                 <div className="Charts">
                     <div className="Charts_top">
                         <BarChart data={usernames} title={"Username frequency"} />
@@ -47,12 +53,6 @@ export default class SSHPage extends Component {
                     <div className="Charts_bottom">
                         <LineChart data={ips} title={"Most common ips"} />
                     </div>
-                </div>
-                <div className="Upload">
-                    <input type="file" onChange={this.onChangeHandler} />
-                    <button type="button" onClick={this.onClickHandler}>
-                        Upload
-                    </button>
                 </div>
             </div>
         );
