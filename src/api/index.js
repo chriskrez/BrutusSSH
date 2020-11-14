@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const fileUpload = require("express-fileupload");
 
-const graphRoutes = require("./routes/graph");
+const uploadRoutes = require("./routes/upload");
 
 const port = 4000;
 const app = express();
@@ -33,7 +33,7 @@ app.use(
 app.use(fileUpload());
 
 // Routes
-app.use("/api/graphs", graphRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.listen(port, () => {
   console.log(`Backend API listening at on port:${port}`);
