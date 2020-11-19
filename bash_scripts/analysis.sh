@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "SSH Log Analysis\n" > analysis.txt
-cat logs.txt | grep "Invalid user" > invalidUsers.txt
+cat $1 | grep "Invalid user" > invalidUsers.txt
 awk '{print $8}' invalidUsers.txt | sort | uniq -c | sort -nr | awk '{print $2 "\t" $1}' > usernames.txt
 
 echo "Most used usernames" >> analysis.txt
