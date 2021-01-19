@@ -24,13 +24,15 @@ export default class SSHPage extends Component {
   onClickHandler = () => {
     const data = new FormData();
     data.append("file", this.state.selectedFile);
-    axios.post("http://localhost:4000/api/upload/", data).then((res) => {
-      this.setState({
-        usernames: res.data.usernames,
-        ips: res.data.ips,
-        countries: res.data.countries,
+    axios
+      .post(`http://localhost:${window.port}/api/upload/`, data)
+      .then((res) => {
+        this.setState({
+          usernames: res.data.usernames,
+          ips: res.data.ips,
+          countries: res.data.countries,
+        });
       });
-    });
   };
 
   render() {

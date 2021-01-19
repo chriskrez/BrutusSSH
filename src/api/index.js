@@ -1,11 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
 const fileUpload = require("express-fileupload");
+const cors = require("cors");
 
 const uploadRoutes = require("./routes/upload");
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 const app = express();
+app.use(cors());
 
 // Logging
 morgan.token("body", function (req, res) {

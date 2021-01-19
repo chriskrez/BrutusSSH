@@ -1,37 +1,12 @@
-const electron = require("electron");
-const path = require("path");
-const isDev = require("electron-is-dev");
+const getPort = require("get-port");
 
-const BrowserWindow = electron.BrowserWindow;
-
-const app = electron.app;
-let mainWindow;
-
-require("../src/api/index.js");
-
-function createWindow() {
-  mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 880,
-  });
-  mainWindow.loadURL(
-    isDev
-      ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../build/index.html")}`
-  );
-
-  mainWindow.on("closed", () => (mainWindow = null));
+if (!process.env.PORT) {
+  (async () => {
+    process.env["PORT"] = await getPort({
+      port: getPort.makeRange(4000, 4200),
+    });
+    require("./init.js");
+  })();
+} else {
+  require("./init.js");
 }
-
-app.on("ready", createWindow);
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
-
-app.on("activate", () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
