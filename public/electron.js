@@ -7,6 +7,8 @@ const BrowserWindow = electron.BrowserWindow;
 const app = electron.app;
 let mainWindow;
 
+require("../src/api/index.js");
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
