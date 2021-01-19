@@ -13,6 +13,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 880,
+    icon: __dirname + "/icon.png",
   });
   mainWindow.webContents.executeJavaScript(`window.port = ${process.env.PORT}`);
   mainWindow.loadURL(

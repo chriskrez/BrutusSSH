@@ -7,7 +7,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="Title"> Logalyzer </div>
+        <img src="logo.png" alt="Logo" />
         <SSHPage />
       </div>
     );
