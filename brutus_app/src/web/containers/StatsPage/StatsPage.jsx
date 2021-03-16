@@ -7,6 +7,12 @@ import "./StatsPage.scss";
 
 export default class StatsPage extends Component {
   state = {};
+  onChangeHandler = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      this.props.upload(file);
+    }
+  };
 
   render() {
     if (!this.state.visible) {
@@ -19,14 +25,18 @@ export default class StatsPage extends Component {
     const { usernames, ips, countries } = this.props.data;
 
     return (
-      <div className="Stats">
-        <div className="Stats-top">
+      <div>
+        <div className="Stats">
           <BarChart data={usernames} title={"Username frequency"} />
           <DoughnutChart data={countries} title={"Countries"} />
-        </div>
-        <div className="Stats-bottom">
           <LineChart data={ips} title={"Most common ips"} />
         </div>
+        <button children="Reupload File" onClick={() => this.input.click()} />
+        <input
+          type="file"
+          ref={(input) => (this.input = input)}
+          onChange={this.onChangeHandler}
+        />
       </div>
     );
   }

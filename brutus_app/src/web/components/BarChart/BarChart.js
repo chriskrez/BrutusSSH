@@ -1,21 +1,29 @@
 import React, { Component, createRef } from "react";
 import Chart from "chart.js";
 
-var defaults = [{name: "example", value: "5"}, {name: "example", value: "5"},{name: "example", value: "5"}];
+var defaults = [
+  { name: "example", value: "5" },
+  { name: "example", value: "5" },
+  { name: "example", value: "5" },
+];
 
-export default class BarChart extends Component {  
+export default class BarChart extends Component {
   constructor(props) {
     super(props);
     this.chartRef = createRef();
   }
 
   returnDataNames = () => {
-    return this.props.data.length ? this.props.data.map((d) => d.name) : defaults.map((d) => d.name);
-  }
+    return this.props.data.length
+      ? this.props.data.map((d) => d.name)
+      : defaults.map((d) => d.name);
+  };
 
   returnDataValues = () => {
-    return this.props.data.length ? this.props.data.map((d) => d.value) :  defaults.map((d) => d.value);
-  }
+    return this.props.data.length
+      ? this.props.data.map((d) => d.value)
+      : defaults.map((d) => d.value);
+  };
 
   componentDidUpdate = () => {
     this.myChart.data.labels = this.returnDataNames();
@@ -23,7 +31,7 @@ export default class BarChart extends Component {
     this.myChart.update();
   };
 
-  componentDidMount = () => {  
+  componentDidMount = () => {
     this.myChart = new Chart(this.chartRef.current, {
       type: "bar",
       data: {

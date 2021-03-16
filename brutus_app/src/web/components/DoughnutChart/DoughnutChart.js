@@ -1,7 +1,11 @@
 import React, { Component, createRef } from "react";
 import Chart from "chart.js";
 
-var defaults = [{name: "example", value: "5"}, {name: "example", value: "5"},{name: "example", value: "5"}];
+var defaults = [
+  { name: "example", value: "5" },
+  { name: "example", value: "5" },
+  { name: "example", value: "5" },
+];
 export default class DoughnutChart extends Component {
   constructor(props) {
     super(props);
@@ -9,12 +13,16 @@ export default class DoughnutChart extends Component {
   }
 
   returnDataNames = () => {
-    return this.props.data.length ? this.props.data.map((d) => d.name) : defaults.map((d) => d.name);
-  }
+    return this.props.data.length
+      ? this.props.data.map((d) => d.name)
+      : defaults.map((d) => d.name);
+  };
 
   returnDataValues = () => {
-    return this.props.data.length ? this.props.data.map((d) => d.value) :  defaults.map((d) => d.value);
-  }
+    return this.props.data.length
+      ? this.props.data.map((d) => d.value)
+      : defaults.map((d) => d.value);
+  };
 
   componentDidUpdate = () => {
     this.myChart.data.labels = this.returnDataNames();
@@ -22,9 +30,14 @@ export default class DoughnutChart extends Component {
     this.myChart.update();
   };
 
-  componentDidMount = () => {    
+  componentDidMount = () => {
     this.myChart = new Chart(this.chartRef.current, {
       type: "doughnut",
+      options: {
+        legend: {
+          position: "left",
+        },
+      },
       data: {
         labels: this.returnDataNames(),
         datasets: [
@@ -40,7 +53,7 @@ export default class DoughnutChart extends Component {
               "#3e517a",
               "#b08ea2",
               "#BBB6DF",
-              "#877666",  
+              "#877666",
             ],
           },
         ],

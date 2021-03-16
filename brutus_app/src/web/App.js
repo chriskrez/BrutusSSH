@@ -37,7 +37,10 @@ class App extends Component {
       <div className={appClass}>
         <img className={logoClass} src="logo.png" alt="Logo" />
         {this.state.usernames && (
-          <StatsPage data={{ usernames, countries, ips }} />
+          <StatsPage
+            upload={this.upload}
+            data={{ usernames, countries, ips }}
+          />
         )}
         {!this.state.usernames && error && (
           <h2 children="Something went wrong" />
