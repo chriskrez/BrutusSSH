@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/logo-mini.png">
+  <img src="./brutus_app/public/logo-mini.png">
 </p>
 
 # Brutus SSH
