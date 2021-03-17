@@ -24,12 +24,13 @@ def readDefaults():
             "log_path":"/var/log/auth.log",
             "time_window":"5",
             "threshold": "50",
-            "email_sender": "example@example.com"
+            "email_receiver": "example@example.com"
         }
 
         print("Please fill the default values in emailDefaults.json")
         with open('emailDefaults.json', 'w') as defaults:
             json.dump(content, defaults)
+        return
 
 def checkAttack():
     with open(LOG_PATH, "r") as logs:
