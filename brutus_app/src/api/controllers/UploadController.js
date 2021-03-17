@@ -1,7 +1,6 @@
 const scripts = require("../scripts/extractData.js");
 
-const graphUsernames = (file) => {
-  const usernames = scripts.extractUsernames(file);
+const graphUsernames = (usernames) => {
   const data = [];
   for (var username in usernames) {
     data.push({ name: username, value: usernames[username] });
@@ -14,8 +13,7 @@ const graphUsernames = (file) => {
   return data.slice(0, 10);
 };
 
-const graphIps = (file) => {
-  const ips = scripts.extractInvalidIps(file);
+const graphIps = (ips) => {
   const data = [];
   for (var ip in ips) {
     data.push({ name: ip, value: ips[ip] });
@@ -33,7 +31,7 @@ const graphCountries = async (ips) => {
   const data = [];
 
   for (var obj in countries) {
-    data.push({ name: obj, value: countries[obj]});
+    data.push({ name: obj, value: countries[obj] });
   }
 
   data.sort((a, b) => {
@@ -41,13 +39,14 @@ const graphCountries = async (ips) => {
   });
 
   return data.slice(0, 10);
-}
+};
 
 module.exports = {
-  async upload (req, res) {
+  async upload(req, res) {
     const data = req.files.file.data;
-    const usernames = graphUsernames(data);
-    const ips = graphIps(data);
+    const results = await scripts.extractUsernamesAndIps(data);
+    const usernames = graphUsernames(results[0]);
+    const ips = graphIps(results[1]);
     const countries = await graphCountries(ips);
 
     return res.send({

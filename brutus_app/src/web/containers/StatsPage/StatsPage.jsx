@@ -27,9 +27,17 @@ export default class StatsPage extends Component {
     return (
       <div>
         <div className="Stats">
-          <BarChart data={usernames} title={"Username frequency"} />
-          <DoughnutChart data={countries} title={"Countries"} />
-          <LineChart data={ips} title={"Most common ips"} />
+          <span>
+            <div className="Stats-chart">
+              <BarChart data={usernames} title={"Username frequency"} />
+            </div>
+            <div className="Stats-chart">
+              <LineChart data={ips} title={"Most common ips"} />
+            </div>
+          </span>
+          <div className="Stats-chart">
+            <DoughnutChart data={countries} title={"Countries"} />
+          </div>
         </div>
         <button children="Reupload File" onClick={() => this.input.click()} />
         <input

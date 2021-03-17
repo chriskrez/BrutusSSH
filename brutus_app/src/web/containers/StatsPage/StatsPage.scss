@@ -3,9 +3,17 @@ div {
     align-items: center;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 
-    canvas {
-      margin-bottom: 5rem !important;
+    > span {
+      display: flex;
+      justify-content: space-evenly;
+      flex-direction: row;
+    }
+
+    &-chart {
+      margin-bottom: 3rem !important;
+      width: 40vw;
     }
   }
 

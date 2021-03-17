@@ -59,8 +59,11 @@ export default class BarChart extends Component {
         scales: {
           yAxes: [
             {
+              type: "logarithmic",
               ticks: {
                 beginAtZero: true,
+                maxTicksLimit: 8,
+                callback: (label, index, labels) => label,
               },
             },
           ],
