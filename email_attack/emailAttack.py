@@ -51,11 +51,12 @@ def checkAttack():
                     flag = True
                 else:
                     continue
-
-            if "Invalid user" in line or "Failed password for root" in line:
+            
+            regex = re.compile("Failed password for(?: invalid user)? (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*")
+            regexRes = regex.search(line)
+            if regexRes:
                 counter += 1
-                reg = re.compile("from (.*) port")
-                ip = reg.search(line).group(1)
+                ip = regexRes.group(2)
                 if ip in ips:
                     ips[ip] += 1
                 else:
