@@ -51,7 +51,8 @@ def checkAttack():
                     flag = True
                 else:
                     continue
-            if "Invalid user" in line:
+
+            if "Invalid user" in line or "Failed password for root" in line:
                 counter += 1
                 reg = re.compile("from (.*) port")
                 ip = reg.search(line).group(1)
