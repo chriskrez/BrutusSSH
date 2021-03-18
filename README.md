@@ -12,7 +12,7 @@ Brutus SSH is a tool which analyzes SSH log files. It consists of 3 subtools.
 
 ### Electron Application
 
-The first tool which analyzes SSH log files has a graphical interface, too. It visualizes statistical information, that is extracted from the access log, such as usernames, IPs and countries of origin.
+The first tool, which analyzes SSH log files, has a graphical interface, too. It visualizes statistical information, that is extracted from the access log, such as usernames, IPs and countries of origin.
 
 #### Installation
 
@@ -47,9 +47,9 @@ Run the program in `./dist` (**exe** for windows, **AppImage** for linux)
 
 ### Attack Notifier via Email
 
-This python script can be placed on a server and used periodically (using a cron job) to notify the owner of the server when failed attempts of login surpass a _THRESHOLD_.
+This python script can be placed on a server and used periodically (using a cron job) to notify the owner of the server when failed attempts of login surpass a _threshold_.
 
-A **docker-compose** configuration is provided to in order to run the smtp relay and actually send the email.
+A **docker-compose** configuration is provided too in order to run the smtp relay and actually send the email.
 
 The script draws the information needed from the **emailDefaults.json** file which is generated the first time the script runs and needs to be filled by the owner of the server. A template of this file is stated below.
 
@@ -62,4 +62,4 @@ The script draws the information needed from the **emailDefaults.json** file whi
 
 ### Brutus SSH Bash Script
 
-There is also a simple bash script which takes as arguement the log file and prints in the console the most used usernames, the most common ips and countries.
+There is also a simple bash script which takes as arguement the log file and prints to the console the most used usernames, the most common ips and countries.
