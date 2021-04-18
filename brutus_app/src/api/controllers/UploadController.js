@@ -41,18 +41,35 @@ const graphCountries = async (ips) => {
   return data.slice(0, 10);
 };
 
+const graphHours = async (hours) => {
+  const data = [];
+  for (var hour in hours) {
+    data.push({ name: hour + ":00", value: hours[hour] });
+  }
+
+  data.sort((a, b) => {
+    return parseInt(a.name.slice(0, 2)) - parseInt(b.name.slice(0, 2));
+  });
+
+  return data;
+};
+
 module.exports = {
   async upload(req, res) {
     const data = req.files.file.data;
-    const results = await scripts.extractUsernamesAndIps(data);
-    const usernames = graphUsernames(results[0]);
-    const ips = graphIps(results[1]);
+    const extractedUsernamesAndIps = await scripts.extractUsernamesAndIps(data);
+    const extractedTime = await scripts.extractTime(data);
+
+    const usernames = graphUsernames(extractedUsernamesAndIps[0]);
+    const ips = graphIps(extractedUsernamesAndIps[1]);
     const countries = await graphCountries(ips);
+    const hours = await graphHours(extractedTime);
 
     return res.send({
       usernames,
       ips,
       countries,
+      hours,
     });
   },
 };

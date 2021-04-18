@@ -18,6 +18,7 @@ class App extends Component {
           usernames: res.data.usernames,
           ips: res.data.ips,
           countries: res.data.countries,
+          hours: res.data.hours,
         });
       })
       .catch((err) => {
@@ -29,7 +30,7 @@ class App extends Component {
   };
 
   render() {
-    const { usernames, countries, ips, error } = this.state;
+    const { usernames, countries, ips, hours, error } = this.state;
     const appClass = usernames ? "App" : "App-centered";
     const logoClass = usernames ? "Logo-min" : "Logo";
 
@@ -39,7 +40,7 @@ class App extends Component {
         {this.state.usernames && (
           <StatsPage
             upload={this.upload}
-            data={{ usernames, countries, ips }}
+            data={{ usernames, countries, ips, hours }}
           />
         )}
         {!this.state.usernames && error && (

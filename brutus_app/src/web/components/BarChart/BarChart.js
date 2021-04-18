@@ -32,6 +32,24 @@ export default class BarChart extends Component {
   };
 
   componentDidMount = () => {
+    var colors = [
+      "#a8e0ff",
+      "#36827F",
+      "#65334D",
+      "#934683",
+      "#8ee3f5",
+      "#70cad1",
+      "#3e517a",
+      "#b08ea2",
+      "#BBB6DF",
+      "#877666",
+    ];
+
+    var backgroundColors = [];
+    for (var i = 0; i < this.returnDataNames().length; i++) {
+      backgroundColors[i] = colors[i % 10];
+    }
+
     this.myChart = new Chart(this.chartRef.current, {
       type: "bar",
       data: {
@@ -40,18 +58,7 @@ export default class BarChart extends Component {
           {
             label: this.props.title,
             data: this.returnDataValues(),
-            backgroundColor: [
-              "#a8e0ff",
-              "#36827F",
-              "#65334D",
-              "#934683",
-              "#8ee3f5",
-              "#70cad1",
-              "#3e517a",
-              "#b08ea2",
-              "#BBB6DF",
-              "#877666",
-            ],
+            backgroundColor: backgroundColors,
           },
         ],
       },

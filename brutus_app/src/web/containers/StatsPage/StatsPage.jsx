@@ -22,7 +22,7 @@ export default class StatsPage extends Component {
       return <div />;
     }
 
-    const { usernames, ips, countries } = this.props.data;
+    const { usernames, ips, countries, hours } = this.props.data;
 
     return (
       <div>
@@ -35,9 +35,14 @@ export default class StatsPage extends Component {
               <LineChart data={ips} title={"Most common ips"} />
             </div>
           </span>
-          <div className="Stats-chart">
-            <DoughnutChart data={countries} title={"Countries"} />
-          </div>
+          <span>
+            <div className="Stats-chart">
+              <DoughnutChart data={countries} title={"Countries"} />
+            </div>
+            <div className="Stats-chart">
+              <BarChart data={hours} title={"Hours"} />
+            </div>
+          </span>
         </div>
         <button children="Reupload File" onClick={() => this.input.click()} />
         <input

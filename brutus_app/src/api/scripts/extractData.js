@@ -54,4 +54,28 @@ module.exports = {
 
     return result;
   },
+
+  async extractTime(file) {
+    var regexp = new RegExp(
+      ".* (\\d{2}):(\\d{2}):(\\d{2}) .* Failed password for .*"
+    );
+    var result = {};
+
+    file = file.toString();
+    const lines = file.split(/\r?\n/);
+    lines.forEach((line) => {
+      if (line.match(regexp)) {
+        match = line.match(regexp);
+        var hour = match[1];
+
+        if (result[hour]) {
+          result[hour] += 1;
+        } else {
+          result[hour] = 1;
+        }
+      }
+    });
+
+    return result;
+  },
 };
