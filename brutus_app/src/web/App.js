@@ -19,6 +19,7 @@ class App extends Component {
           ips: res.data.ips,
           countries: res.data.countries,
           hours: res.data.hours,
+          error: res.data.error,
         });
       })
       .catch((err) => {
@@ -44,7 +45,10 @@ class App extends Component {
           />
         )}
         {!this.state.usernames && error && (
-          <h2 children="Something went wrong" />
+          <div>
+            <UploadPage upload={this.upload} />
+            <h2 children="Something went wrong" />
+          </div>
         )}
         {!this.state.usernames && !error && <UploadPage upload={this.upload} />}
       </div>

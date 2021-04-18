@@ -137,6 +137,12 @@ module.exports = {
     const data = req.files.file.data;
     const captureGroups = extractCaptureGroups(data);
 
+    if (captureGroups[1].length === 0) {
+      return res.send({
+        error: true,
+      });
+    }
+
     const hours = graphHours(captureGroups[0]);
     const usernames = graphUsernames(captureGroups[1]);
 
