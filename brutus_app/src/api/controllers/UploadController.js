@@ -67,6 +67,7 @@ const graphIps = (ips) => {
     }
   });
 
+  const data = [];
   for (var ip in countedIps) {
     data.push({ name: ip, value: countedIps[ip] });
   }
