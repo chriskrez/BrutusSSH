@@ -67,7 +67,6 @@ const graphIps = (ips) => {
     }
   });
 
-  const data = [];
   for (var ip in countedIps) {
     data.push({ name: ip, value: countedIps[ip] });
   }
@@ -82,25 +81,34 @@ const graphIps = (ips) => {
 const graphCountries = async (ips) => {
   var countries = {};
 
-  for (ip in ips) {
-    const record = ips[ip];
+  var keys = Object.keys(ips);
+  var iterations = Math.ceil(keys.length / 100);
 
-    let res = await axios.get("http://www.geoplugin.net/json.gp?ip=" + ip);
+  for (var i = 0; i < iterations; i++) {
+    var sliced = keys.slice(100 * i, Math.min(100 * (i + 1), keys.length));
 
-    var country = res.data.geoplugin_countryName;
-    if (countries[country]) {
-      var oldValue = countries[country];
-      countries[country] = oldValue + record;
-    } else {
-      countries[country] = record;
-    }
+    var req = [];
+    sliced.forEach((ip) => {
+      req.push({ query: ip, fields: "country,query" });
+    });
+
+    let res = await axios.post("http://ip-api.com/batch", req);
+    res.data.forEach((q) => {
+      var country = q.country;
+      var ip = q.query;
+
+      if (countries[country]) {
+        countries[country] += ips[ip];
+      } else {
+        countries[country] = ips[ip];
+      }
+    });
   }
 
-  const data = [];
-
-  for (var obj in countries) {
-    data.push({ name: obj, value: countries[obj] });
-  }
+  const data = Object.keys(countries).map((country) => ({
+    name: country,
+    value: countries[country],
+  }));
 
   data.sort((a, b) => {
     return b.value - a.value;
@@ -148,7 +156,7 @@ module.exports = {
 
     const ipsResults = graphIps(captureGroups[2]);
     const ips = ipsResults[1];
-    const countries = graphCountries(ipsResults[0]);
+    const countries = await graphCountries(ipsResults[0]);
 
     return res.send({
       usernames,
