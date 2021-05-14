@@ -29,10 +29,21 @@ const extractCaptureGroups = (file) => {
     index -= 1;
   } while (lastLine === "");
 
-  var firstDateMatch = firstLine
-    .match(new RegExp("(\\w*) \\s*(\\d+)"))[0]
-    .trim();
-  var lastDateMatch = lastLine.match(new RegExp("(\\w*) \\s*(\\d+)"))[0].trim();
+  if (firstLine === undefined || lastLine === undefined) {
+    return;
+  }
+
+  var firstDateMatch = "";
+  var lastDateMatch = "";
+
+  if (firstLine.match(new RegExp("(\\w*) \\s*(\\d+)"))) {
+    firstDateMatch = firstLine.match(new RegExp("(\\w*) \\s*(\\d+)"))[0].trim();
+  }
+
+  if (lastLine.match(new RegExp("(\\w*) \\s*(\\d+)"))) {
+    lastDateMatch = lastLine.match(new RegExp("(\\w*) \\s*(\\d+)"))[0].trim();
+  }
+
   var dateRange = [firstDateMatch, lastDateMatch];
 
   var tfattempts = 0;
@@ -188,16 +199,16 @@ module.exports = {
     const data = req.files.file.data;
 
     const extractedData = extractCaptureGroups(data);
+    if (extractedData === undefined) {
+      return res.send({
+        error: "No matching login attempt. Please try another file!",
+      });
+    }
+
     const failedCaptureGroups = extractedData[0];
     const successResults = extractedData[1];
     const dateRange = extractedData[2];
     const tfattempts = extractedData[3];
-
-    if (failedCaptureGroups[1].length === 0) {
-      return res.send({
-        error: true,
-      });
-    }
 
     async.parallel(
       [

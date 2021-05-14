@@ -31,10 +31,10 @@ class App extends Component {
           isLoading: false,
         });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
         this.setState({
-          error: true,
+          error,
         });
       });
   };
@@ -75,7 +75,7 @@ class App extends Component {
         {!this.state.usernames && error && (
           <div>
             <UploadPage upload={this.upload} />
-            <h2 children="Something went wrong" />
+            <h2 children={this.state.error} />
           </div>
         )}
         {!this.state.usernames && !error && !this.state.isLoading && (
