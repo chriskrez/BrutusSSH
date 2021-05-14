@@ -132,45 +132,6 @@ const graphIps = (ips) => {
   return [countedIps, data.slice(0, 10)];
 };
 
-const graphCountries = async (ips) => {
-  var countries = {};
-
-  var keys = Object.keys(ips);
-  var iterations = Math.ceil(keys.length / 100);
-
-  for (var i = 0; i < iterations; i++) {
-    var sliced = keys.slice(100 * i, Math.min(100 * (i + 1), keys.length));
-
-    var req = [];
-    sliced.forEach((ip) => {
-      req.push({ query: ip, fields: "country,query" });
-    });
-
-    let res = await axios.post("http://ip-api.com/batch", req);
-    res.data.forEach((q) => {
-      var country = q.country;
-      var ip = q.query;
-
-      if (countries[country]) {
-        countries[country] += ips[ip];
-      } else {
-        countries[country] = ips[ip];
-      }
-    });
-  }
-
-  const data = Object.keys(countries).map((country) => ({
-    name: country,
-    value: countries[country],
-  }));
-
-  data.sort((a, b) => {
-    return b.value - a.value;
-  });
-
-  return data.slice(0, 10);
-};
-
 const graphHours = (hours) => {
   var countedHours = {};
 
@@ -229,13 +190,11 @@ module.exports = {
           });
         }
 
-        const countries = await graphCountries(results[2][0]);
-
         return res.send({
           hours: results[0],
           usernames: results[1][0],
           ips: results[2][1],
-          countries,
+          countedIps: results[2][0],
           attempts: results[1][1],
           success: successResults,
           dateRange,
@@ -243,5 +202,47 @@ module.exports = {
         });
       }
     );
+  },
+
+  async fetchCountries(req, res) {
+    var ips = req.body;
+    var countries = {};
+
+    var keys = Object.keys(ips);
+    var iterations = Math.ceil(keys.length / 100);
+
+    for (var i = 0; i < iterations; i++) {
+      var sliced = keys.slice(100 * i, Math.min(100 * (i + 1), keys.length));
+
+      var request = [];
+      sliced.forEach((ip) => {
+        request.push({ query: ip, fields: "country,query" });
+      });
+
+      let response = await axios.post("http://ip-api.com/batch", request);
+      response.data.forEach((q) => {
+        var country = q.country;
+        var ip = q.query;
+
+        if (countries[country]) {
+          countries[country] += ips[ip];
+        } else {
+          countries[country] = ips[ip];
+        }
+      });
+    }
+
+    const data = Object.keys(countries).map((country) => ({
+      name: country,
+      value: countries[country],
+    }));
+
+    data.sort((a, b) => {
+      return b.value - a.value;
+    });
+
+    return res.send({
+      countries: data.slice(0, 10),
+    });
   },
 };

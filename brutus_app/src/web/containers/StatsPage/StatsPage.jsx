@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 import BarChart from "../../components/BarChart/BarChart";
 import DoughnutChart from "../../components/DoughnutChart/DoughnutChart";
@@ -6,8 +7,35 @@ import LineChart from "../../components/LineChart/LineChart";
 import "./StatsPage.scss";
 
 export default class StatsPage extends Component {
-  state = {};
+  state = {
+    countries: [],
+  };
+
+  fetchCountries = (ips) => {
+    axios
+      .post(
+        `http://localhost:${window.port || 4000}/api/upload/fetch_countries`,
+        ips
+      )
+      .then((res) => {
+        this.setState({
+          countries: res.data.countries,
+          error: res.data.error,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.setState({
+          error,
+        });
+      });
+  };
+
   onChangeHandler = (event) => {
+    this.setState({
+      countries: [],
+    });
+
     const file = event.target.files[0];
     if (file) {
       this.props.upload(file);
@@ -46,12 +74,14 @@ export default class StatsPage extends Component {
     const {
       usernames,
       ips,
-      countries,
+      countedIps,
       hours,
       attempts,
       dateRange,
       tfattempts,
     } = this.props.data;
+
+    const countries = this.state.countries;
 
     return (
       <div>
@@ -77,6 +107,10 @@ export default class StatsPage extends Component {
           <span>
             <div className="Stats-chart">
               <DoughnutChart data={countries} title={"Countries"} />
+              <button
+                children="Fetch countries"
+                onClick={() => this.fetchCountries(countedIps)}
+              />
             </div>
             <div className="Stats-chart">
               <BarChart data={hours} title={"Hours"} />

@@ -21,7 +21,7 @@ class App extends Component {
         this.setState({
           usernames: res.data.usernames,
           ips: res.data.ips,
-          countries: res.data.countries,
+          countedIps: res.data.countedIps,
           hours: res.data.hours,
           error: res.data.error,
           attempts: res.data.attempts,
@@ -42,7 +42,7 @@ class App extends Component {
   render() {
     const {
       usernames,
-      countries,
+      countedIps,
       ips,
       hours,
       error,
@@ -51,6 +51,7 @@ class App extends Component {
       dateRange,
       tfattempts,
     } = this.state;
+
     const appClass = usernames ? "App" : "App-centered";
     const logoClass = usernames ? "Logo-min" : "Logo";
 
@@ -62,7 +63,7 @@ class App extends Component {
             upload={this.upload}
             data={{
               usernames,
-              countries,
+              countedIps,
               ips,
               hours,
               attempts,
