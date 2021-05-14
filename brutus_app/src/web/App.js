@@ -27,6 +27,7 @@ class App extends Component {
           attempts: res.data.attempts,
           success: res.data.success,
           dateRange: res.data.dateRange,
+          tfattempts: res.data.tfattempts,
           isLoading: false,
         });
       })
@@ -48,6 +49,7 @@ class App extends Component {
       attempts,
       success,
       dateRange,
+      tfattempts,
     } = this.state;
     const appClass = usernames ? "App" : "App-centered";
     const logoClass = usernames ? "Logo-min" : "Logo";
@@ -66,6 +68,7 @@ class App extends Component {
               attempts,
               success,
               dateRange,
+              tfattempts,
             }}
           />
         )}
