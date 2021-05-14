@@ -83,12 +83,16 @@ export default class StatsPage extends Component {
             </div>
           </span>
           <h3> Information for Successful Login Attempts </h3>
-          <table id="successful-logins">
-            <tbody>
-              <tr>{this.renderTableHeader()}</tr>
-              {this.renderTableData()}
-            </tbody>
-          </table>
+          {this.props.data.success.length === 0 ? (
+            <p> No successful logins were recorded </p>
+          ) : (
+            <table id="successful-logins">
+              <tbody>
+                <tr>{this.renderTableHeader()}</tr>
+                {this.renderTableData()}
+              </tbody>
+            </table>
+          )}
         </div>
         <button children="Reupload File" onClick={() => this.input.click()} />
         <input
