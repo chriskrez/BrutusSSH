@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { ActivityIndicator } from "react-native";
 import axios from "axios";
 import "./App.scss";
 
@@ -6,9 +7,12 @@ import UploadPage from "./containers/UploadPage/UploadPage";
 import StatsPage from "./containers/StatsPage/StatsPage";
 
 class App extends Component {
-  state = {};
+  state = {
+    isLoading: false,
+  };
 
   upload = (file) => {
+    this.setState({ isLoading: true });
     const data = new FormData();
     data.append("file", file);
     axios
@@ -20,6 +24,7 @@ class App extends Component {
           countries: res.data.countries,
           hours: res.data.hours,
           error: res.data.error,
+          isLoading: false,
         });
       })
       .catch((err) => {
@@ -50,7 +55,12 @@ class App extends Component {
             <h2 children="Something went wrong" />
           </div>
         )}
-        {!this.state.usernames && !error && <UploadPage upload={this.upload} />}
+        {!this.state.usernames && !error && !this.state.isLoading && (
+          <UploadPage upload={this.upload} />
+        )}
+        {this.state.isLoading && (
+          <ActivityIndicator size="large" color={"#000066"} />
+        )}
       </div>
     );
   }
