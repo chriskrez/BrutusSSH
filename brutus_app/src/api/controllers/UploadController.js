@@ -11,11 +11,11 @@ const extractCaptureGroups = (file) => {
   var failedIps = [];
 
   var regexpFail = new RegExp(
-    "(\\w*) (\\d+) (\\d{2}):(\\d{2}):(\\d{2}) .* Failed password for(?: invalid user)? (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*"
+    "(\\w*) \\s*(\\d+) (\\d{2}):(\\d{2}):(\\d{2}) .* Failed password for(?: invalid user)? (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*"
   );
 
   var regexpSuccess = new RegExp(
-    "(\\w*) (\\d+) (\\d{2}:\\d{2}:\\d{2}) .* Accepted (.+) for (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*"
+    "(\\w*) \\s*(\\d+) (\\d{2}:\\d{2}:\\d{2}) .* Accepted (.+) for (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*"
   );
 
   file = file.toString();
@@ -29,8 +29,10 @@ const extractCaptureGroups = (file) => {
     index -= 1;
   } while (lastLine === "");
 
-  var firstDateMatch = firstLine.match(new RegExp("(\\w*) (\\d+) "))[0].trim();
-  var lastDateMatch = lastLine.match(new RegExp("(\\w*) (\\d+) "))[0].trim();
+  var firstDateMatch = firstLine
+    .match(new RegExp("(\\w*) \\s*(\\d+)"))[0]
+    .trim();
+  var lastDateMatch = lastLine.match(new RegExp("(\\w*) \\s*(\\d+)"))[0].trim();
   var dateRange = [firstDateMatch, lastDateMatch];
 
   var tfattempts = 0;
