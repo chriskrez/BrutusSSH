@@ -93,6 +93,7 @@ export default class StatsPage extends Component {
         <button children="Reupload File" onClick={() => this.input.click()} />
         <input
           type="file"
+          accept=".txt, .log"
           ref={(input) => (this.input = input)}
           onChange={this.onChangeHandler}
         />

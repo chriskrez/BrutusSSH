@@ -16,6 +16,7 @@ class UploadPage extends Component {
         <button children="Choose file" onClick={() => this.input.click()} />
         <input
           type="file"
+          accept=".txt, .log"
           ref={(input) => (this.input = input)}
           onChange={this.onChangeHandler}
         />
