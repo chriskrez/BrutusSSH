@@ -19,6 +19,19 @@ const extractCaptureGroups = (file) => {
 
   file = file.toString();
   const lines = file.split(/\r?\n/);
+  const firstLine = lines.shift();
+
+  var lastLine = "";
+  var index = -1;
+  do {
+    lastLine = lines.slice(index)[0];
+    index -= 1;
+  } while (lastLine === "");
+
+  var firstDateMatch = firstLine.match(new RegExp("(\\w*) (\\d+) "))[0].trim();
+  var lastDateMatch = lastLine.match(new RegExp("(\\w*) (\\d+) "))[0].trim();
+  var dateRange = [firstDateMatch, lastDateMatch];
+
   lines.forEach((line) => {
     if (line.match(regexpFail)) {
       const match = line.match(regexpFail);
@@ -46,7 +59,7 @@ const extractCaptureGroups = (file) => {
   failedMatchingCaptureGroups.push(failedUsernames);
   failedMatchingCaptureGroups.push(failedIps);
 
-  return [failedMatchingCaptureGroups, successResults];
+  return [failedMatchingCaptureGroups, successResults, dateRange];
 };
 
 const graphUsernames = (usernames) => {
@@ -163,9 +176,11 @@ const graphHours = (hours) => {
 module.exports = {
   async upload(req, res) {
     const data = req.files.file.data;
+
     const extractedData = extractCaptureGroups(data);
     const failedCaptureGroups = extractedData[0];
     const successResults = extractedData[1];
+    const dateRange = extractedData[2];
 
     if (failedCaptureGroups[1].length === 0) {
       return res.send({
@@ -201,6 +216,7 @@ module.exports = {
           countries,
           attempts: results[1][1],
           success: successResults,
+          dateRange,
         });
       }
     );

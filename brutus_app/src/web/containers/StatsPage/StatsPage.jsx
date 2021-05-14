@@ -43,14 +43,18 @@ export default class StatsPage extends Component {
       return <div />;
     }
 
-    const { usernames, ips, countries, hours, attempts } = this.props.data;
+    const { usernames, ips, countries, hours, attempts, dateRange } =
+      this.props.data;
 
     return (
       <div>
         <div className="Stats">
           <h3> Information for Failed Login Attempts </h3>
           <p>
-            Total failed attempts: <strong>{attempts}</strong>
+            Total failed attempts: <strong>{attempts} </strong>{" "}
+            {dateRange[0].localeCompare(dateRange[1])
+              ? `from ${dateRange[0]} to ${dateRange[1]}`
+              : `for ${dateRange[0]}`}
           </p>
           <span>
             <div className="Stats-chart">
