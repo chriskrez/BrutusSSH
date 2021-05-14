@@ -1,4 +1,5 @@
 const axios = require("axios");
+const async = require("async");
 
 const extractCaptureGroups = (file) => {
   var matchingCaptureGroups = [];
@@ -152,18 +153,34 @@ module.exports = {
       });
     }
 
-    const hours = graphHours(captureGroups[0]);
-    const usernames = graphUsernames(captureGroups[1]);
+    async.parallel(
+      [
+        function (callback) {
+          callback(null, graphHours(captureGroups[0]));
+        },
+        function (callback) {
+          callback(null, graphUsernames(captureGroups[1]));
+        },
+        function (callback) {
+          callback(null, graphIps(captureGroups[2]));
+        },
+      ],
+      async function (err, results) {
+        if (err) {
+          return res.send({
+            error: true,
+          });
+        }
 
-    const ipsResults = graphIps(captureGroups[2]);
-    const ips = ipsResults[1];
-    const countries = await graphCountries(ipsResults[0]);
+        const countries = await graphCountries(results[2][0]);
 
-    return res.send({
-      usernames,
-      ips,
-      countries,
-      hours,
-    });
+        return res.send({
+          hours: results[0],
+          usernames: results[1],
+          ips: results[2][1],
+          countries,
+        });
+      }
+    );
   },
 };
