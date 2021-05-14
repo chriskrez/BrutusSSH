@@ -24,6 +24,8 @@ class App extends Component {
           countries: res.data.countries,
           hours: res.data.hours,
           error: res.data.error,
+          attempts: res.data.attempts,
+          success: res.data.success,
           isLoading: false,
         });
       })
@@ -36,7 +38,8 @@ class App extends Component {
   };
 
   render() {
-    const { usernames, countries, ips, hours, error } = this.state;
+    const { usernames, countries, ips, hours, error, attempts, success } =
+      this.state;
     const appClass = usernames ? "App" : "App-centered";
     const logoClass = usernames ? "Logo-min" : "Logo";
 
@@ -46,7 +49,7 @@ class App extends Component {
         {this.state.usernames && (
           <StatsPage
             upload={this.upload}
-            data={{ usernames, countries, ips, hours }}
+            data={{ usernames, countries, ips, hours, attempts, success }}
           />
         )}
         {!this.state.usernames && error && (

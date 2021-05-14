@@ -2,38 +2,55 @@ const axios = require("axios");
 const async = require("async");
 
 const extractCaptureGroups = (file) => {
-  var matchingCaptureGroups = [];
-  var hours = [];
-  var usernames = [];
-  var ips = [];
+  var failedMatchingCaptureGroups = [];
+  var successResults = [];
 
-  var regexp = new RegExp(
+  var failedHours = [];
+  var failedUsernames = [];
+  var failedIps = [];
+
+  var regexpFail = new RegExp(
     ".* (\\d{2}):(\\d{2}):(\\d{2}) .* Failed password for(?: invalid user)? (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*"
+  );
+
+  var regexpSuccess = new RegExp(
+    "(\\w*) (\\d+) (\\d{2}:\\d{2}:\\d{2}) .* Accepted (.+) for (.+) from (\\d+\\.\\d+\\.\\d+\\.\\d+).*"
   );
 
   file = file.toString();
   const lines = file.split(/\r?\n/);
   lines.forEach((line) => {
-    if (line.match(regexp)) {
-      const match = line.match(regexp);
-      var hour = match[1];
-      var username = match[4];
-      var ip = match[5];
+    if (line.match(regexpFail)) {
+      const match = line.match(regexpFail);
+      var failedHour = match[1];
+      var failedUsername = match[4];
+      var failedIp = match[5];
 
-      hours.push(hour);
-      usernames.push(username);
-      ips.push(ip);
+      failedHours.push(failedHour);
+      failedUsernames.push(failedUsername);
+      failedIps.push(failedIp);
+    } else if (line.match(regexpSuccess)) {
+      const match = line.match(regexpSuccess);
+      var successParams = {};
+
+      successParams["date"] = match[1] + " " + match[2] + " " + match[3];
+      successParams["method"] = match[4];
+      successParams["username"] = match[5];
+      successParams["ip"] = match[6];
+
+      successResults.push(successParams);
     }
   });
 
-  matchingCaptureGroups.push(hours);
-  matchingCaptureGroups.push(usernames);
-  matchingCaptureGroups.push(ips);
+  failedMatchingCaptureGroups.push(failedHours);
+  failedMatchingCaptureGroups.push(failedUsernames);
+  failedMatchingCaptureGroups.push(failedIps);
 
-  return matchingCaptureGroups;
+  return [failedMatchingCaptureGroups, successResults];
 };
 
 const graphUsernames = (usernames) => {
+  var attempts = usernames.length;
   var countedUsernames = {};
 
   usernames.forEach((user) => {
@@ -53,7 +70,8 @@ const graphUsernames = (usernames) => {
     return b.value - a.value;
   });
 
-  return data.slice(0, 10);
+  var results = [data.slice(0, 10), attempts];
+  return results;
 };
 
 const graphIps = (ips) => {
@@ -145,9 +163,11 @@ const graphHours = (hours) => {
 module.exports = {
   async upload(req, res) {
     const data = req.files.file.data;
-    const captureGroups = extractCaptureGroups(data);
+    const extractedData = extractCaptureGroups(data);
+    const failedCaptureGroups = extractedData[0];
+    const successResults = extractedData[1];
 
-    if (captureGroups[1].length === 0) {
+    if (failedCaptureGroups[1].length === 0) {
       return res.send({
         error: true,
       });
@@ -156,13 +176,13 @@ module.exports = {
     async.parallel(
       [
         function (callback) {
-          callback(null, graphHours(captureGroups[0]));
+          callback(null, graphHours(failedCaptureGroups[0]));
         },
         function (callback) {
-          callback(null, graphUsernames(captureGroups[1]));
+          callback(null, graphUsernames(failedCaptureGroups[1]));
         },
         function (callback) {
-          callback(null, graphIps(captureGroups[2]));
+          callback(null, graphIps(failedCaptureGroups[2]));
         },
       ],
       async function (err, results) {
@@ -176,9 +196,11 @@ module.exports = {
 
         return res.send({
           hours: results[0],
-          usernames: results[1],
+          usernames: results[1][0],
           ips: results[2][1],
           countries,
+          attempts: results[1][1],
+          success: successResults,
         });
       }
     );

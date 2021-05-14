@@ -14,6 +14,27 @@ export default class StatsPage extends Component {
     }
   };
 
+  renderTableHeader = () => {
+    let header = Object.keys(this.props.data.success[0]);
+    return header.map((key, index) => {
+      return <th key={index}>{key.toUpperCase()}</th>;
+    });
+  };
+
+  renderTableData = () => {
+    return this.props.data.success.map((s, index) => {
+      const { date, method, username, ip } = s;
+      return (
+        <tr key={index + 1}>
+          <td>{date}</td>
+          <td>{method}</td>
+          <td>{username}</td>
+          <td>{ip}</td>
+        </tr>
+      );
+    });
+  };
+
   render() {
     if (!this.state.visible) {
       setTimeout(() => {
@@ -22,11 +43,15 @@ export default class StatsPage extends Component {
       return <div />;
     }
 
-    const { usernames, ips, countries, hours } = this.props.data;
+    const { usernames, ips, countries, hours, attempts } = this.props.data;
 
     return (
       <div>
         <div className="Stats">
+          <h3> Information for Failed Login Attempts </h3>
+          <p>
+            Total failed attempts: <strong>{attempts}</strong>
+          </p>
           <span>
             <div className="Stats-chart">
               <BarChart data={usernames} title={"Username frequency"} />
@@ -43,6 +68,13 @@ export default class StatsPage extends Component {
               <BarChart data={hours} title={"Hours"} />
             </div>
           </span>
+          <h3> Information for Successful Login Attempts </h3>
+          <table id="successful-logins">
+            <tbody>
+              <tr>{this.renderTableHeader()}</tr>
+              {this.renderTableData()}
+            </tbody>
+          </table>
         </div>
         <button children="Reupload File" onClick={() => this.input.click()} />
         <input

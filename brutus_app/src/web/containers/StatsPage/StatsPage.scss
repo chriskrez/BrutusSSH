@@ -5,6 +5,14 @@ div {
     flex-direction: column;
     justify-content: center;
 
+    > h3:first-child {
+      margin-bottom: 1px;
+    }
+
+    > h3:nth-child(2) {
+      margin-bottom: 5px;
+    }
+
     > span {
       display: flex;
       justify-content: space-evenly;
@@ -14,6 +22,36 @@ div {
     &-chart {
       margin-bottom: 3rem !important;
       width: 40vw;
+    }
+
+    #successful-logins {
+      text-align: center;
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      border: 3px solid #ddd;
+      width: 100%;
+    }
+
+    #successful-logins td,
+    #successful-logins th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    #successful-logins tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #successful-logins tr:hover {
+      background-color: #ddd;
+    }
+
+    #successful-logins th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: center;
+      background-color: rgba(95, 158, 160, 1);
+      color: white;
     }
   }
 
@@ -26,8 +64,9 @@ div {
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    margin-top: 10px;
-    padding: 10px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding: 12px;
     transition: 0.2s ease-in-out;
     outline: none;
     width: 20rem;
