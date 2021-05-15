@@ -62,4 +62,11 @@ The script draws the information needed from the **emailDefaults.json** file whi
 
 ### Brutus SSH Bash Script
 
+Prerequisites:
+
+- sed
+- awk
+- geoip
+- figlet 
+
 There is also a simple bash script which takes as arguement the log file and prints to the console the most used usernames, the most common ips and countries.
