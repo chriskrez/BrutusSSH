@@ -105,12 +105,16 @@ export default class StatsPage extends Component {
             </div>
           </span>
           <span>
-            <div className="Stats-chart">
+            <div className="Stats-chart hideable">
               <DoughnutChart data={countries} title={"Countries"} />
-              <button
-                children="Fetch countries"
-                onClick={() => this.fetchCountries(countedIps)}
-              />
+              {!countries.length && (
+                <span>
+                  <button
+                    children="Fetch countries"
+                    onClick={() => this.fetchCountries(countedIps)}
+                  />
+                </span>
+              )}
             </div>
             <div className="Stats-chart">
               <BarChart data={hours} title={"Hours"} />

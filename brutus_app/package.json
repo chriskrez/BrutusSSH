@@ -1,12 +1,24 @@
 {
   "name": "brutus-ssh",
-  "version": "0.1.0",
+  "version": "0.1.3",
+  "repository": "github:chriskrez/BrutusSSH",
   "private": true,
   "build": {
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
     "appId": "gr.auth.csd.chriskreza",
     "files": [
       "src/api/**/*"
     ]
+  },
+  "publish": {
+    "provider": "github",
+    "owner": "Christina Kreza",
+    "private": true,
+    "releaseType": "release"
   },
   "main": "public/electron.js",
   "homepage": "./",
@@ -45,8 +57,7 @@
     "react-eject": "react-scripts eject",
     "electron-dev": "nodemon --watch ./src/api --exec \"electron . --debug\"",
     "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder --publish=always",
-    "build": "npm run react-build && npm run electron-build",
+    "release": "npm run react-build && npm run electron-build",
     "start": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && npm run electron-dev\""
   },
   "eslintConfig": {
