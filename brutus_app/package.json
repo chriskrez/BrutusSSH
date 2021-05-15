@@ -1,9 +1,14 @@
 {
   "name": "brutus-ssh",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "repository": "github:chriskrez/BrutusSSH",
   "private": true,
   "build": {
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
     "appId": "gr.auth.csd.chriskreza",
     "files": [
       "src/api/**/*"
