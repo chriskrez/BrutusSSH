@@ -1,6 +1,6 @@
 {
   "name": "brutus-ssh",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": "github:chriskrez/BrutusSSH",
   "private": true,
   "build": {
@@ -8,6 +8,12 @@
     "files": [
       "src/api/**/*"
     ]
+  },
+  "publish": {
+    "provider": "github",
+    "owner": "Christina Kreza",
+    "private": true,
+    "releaseType": "release"
   },
   "main": "public/electron.js",
   "homepage": "./",
