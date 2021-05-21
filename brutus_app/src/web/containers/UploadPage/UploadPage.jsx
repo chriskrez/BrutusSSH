@@ -5,7 +5,7 @@ class UploadPage extends Component {
   onChangeHandler = (event) => {
     const file = event.target.files[0];
     if (file) {
-      this.props.upload(file);
+      this.props.upload(file.path);
     }
   };
 

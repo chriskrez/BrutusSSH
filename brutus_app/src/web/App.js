@@ -11,10 +11,11 @@ class App extends Component {
     isLoading: false,
   };
 
-  upload = (file) => {
-    this.setState({ isLoading: true });
+  upload = (path) => {
+    this.setState({ isLoading: true, path: path });
     const data = new FormData();
-    data.append("file", file);
+    data.append("path", path);
+
     axios
       .post(`http://localhost:${window.port || 4000}/api/upload/`, data)
       .then((res) => {
@@ -58,8 +59,12 @@ class App extends Component {
     return (
       <div className={appClass}>
         <img className={logoClass} src="logo.png" alt="Logo" />
+        {this.state.isLoading && (
+          <ActivityIndicator size="large" color={"#000066"} />
+        )}
         {this.state.usernames && (
           <StatsPage
+            path={this.state.path}
             upload={this.upload}
             data={{
               usernames,
@@ -81,9 +86,6 @@ class App extends Component {
         )}
         {!this.state.usernames && !error && !this.state.isLoading && (
           <UploadPage upload={this.upload} />
-        )}
-        {this.state.isLoading && (
-          <ActivityIndicator size="large" color={"#000066"} />
         )}
       </div>
     );

@@ -32,13 +32,14 @@ export default class StatsPage extends Component {
   };
 
   onChangeHandler = (event) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     this.setState({
       countries: [],
     });
 
     const file = event.target.files[0];
     if (file) {
-      this.props.upload(file);
+      this.props.upload(file.path);
     }
   };
 
@@ -132,13 +133,25 @@ export default class StatsPage extends Component {
             </table>
           )}
         </div>
-        <button children="Reupload File" onClick={() => this.input.click()} />
-        <input
-          type="file"
-          accept=".txt, .log"
-          ref={(input) => (this.input = input)}
-          onChange={this.onChangeHandler}
-        />
+        <span>
+          <button
+            children="Reload File"
+            onClick={() => {
+              this.props.upload(this.props.path);
+              this.setState({
+                countries: [],
+              });
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
+          <button children="Reupload File" onClick={() => this.input.click()} />
+          <input
+            type="file"
+            accept=".txt, .log"
+            ref={(input) => (this.input = input)}
+            onChange={this.onChangeHandler}
+          />
+        </span>
       </div>
     );
   }
