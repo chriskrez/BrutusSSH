@@ -1,6 +1,6 @@
 const axios = require("axios");
 const async = require("async");
-const fs = require("fs");
+const fs = require("fs").promises;
 const dateFormat = require("dateformat");
 
 const extractCaptureGroups = (file) => {
@@ -159,7 +159,7 @@ const graphHours = (hours) => {
 module.exports = {
   async upload(req, res) {
     const path = req.body.path;
-    const data = fs.readFileSync(path);
+    const data = await fs.readFile(path);
 
     const extractedData = extractCaptureGroups(data);
     if (extractedData === undefined) {

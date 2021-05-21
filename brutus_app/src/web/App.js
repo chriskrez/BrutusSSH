@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { ActivityIndicator } from "react-native";
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import axios from "axios";
 import "./App.scss";
 
@@ -60,7 +61,13 @@ class App extends Component {
       <div className={appClass}>
         <img className={logoClass} src="logo.png" alt="Logo" />
         {this.state.isLoading && (
-          <ActivityIndicator size="large" color={"#000066"} />
+          <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={50}
+            width={50}
+            timeout={3000}
+          />
         )}
         {this.state.usernames && (
           <StatsPage
