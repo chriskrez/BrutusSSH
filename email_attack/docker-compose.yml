@@ -20,8 +20,8 @@ services:
       # - SES_PASSWORD=
       # - SES_REGION=
       # # if provided will enable TLS support
-      # - KEY_PATH=
-      # - CERTIFICATE_PATH=
+      - KEY_PATH=/certs/key.pem
+      - CERTIFICATE_PATH=/certs/cert.pem
       # # the outgoing mail hostname
       - MAILNAME=brutus.ml
     # # set this to any value to disable ipv6
@@ -32,3 +32,6 @@ services:
     # - SMARTHOST_USER=
     # - SMARTHOST_PASSWORD=
     # - SMARTHOST_ALIASES=
+    volumes:
+      - ./key.pem:/certs/key.pem
+      - ./cert.pem:/certs/cert.pem
