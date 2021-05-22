@@ -10,15 +10,23 @@ import smtplib
 
 MONTHS = {"Jan":"01", "Feb":"02", "Mar":"03", "Apr":"04", "May":"05", "Jun":"06", "Jul":"07", "Aug":"08", "Sep":"09", "Oct": "10", "Nov": "11", "Dec": "12"}
 
+def checkExistingFKey(file, key):
+    try:
+        return file[key]
+    except:
+        print("-- Missing value from emailDefaults.json")
+        print("-- Please fill the value {}".format(key))
+        return
+
 def readDefaults():
     if os.path.isfile("./emailDefaults.json"):
         with open("emailDefaults.json") as defFile:
             data = json.load(defFile)
             global LOG_PATH, TIME_WINDOW, THRESHOLD, EMAIL_RECEIVER
-            LOG_PATH = data["log_path"]
-            TIME_WINDOW = int(data["time_window"])
-            THRESHOLD = int(data["threshold"])
-            EMAIL_RECEIVER = data["email_receiver"]
+            LOG_PATH = checkExistingFKey(data, "log_path")
+            TIME_WINDOW = int(checkExistingFKey(data, "time_window"))
+            THRESHOLD = int(checkExistingFKey(data, "threshold"))
+            EMAIL_RECEIVER = checkExistingFKey(data, "email_receiver")
     else:
         content = {
             "log_path":"/var/log/auth.log",
@@ -62,15 +70,37 @@ def checkAttack():
                 else:
                     ips[ip] = 1
 
+        if counter == 0:
+            print("-- No matching failed login attempts")
+            return
+
         if counter >= THRESHOLD:
+            print("-- Threshold exceeded")
             post = []
             for ip in sorted(ips.items(), key=lambda x: x[1], reverse=True):
                 post.append({"query": ip[0], "fields": "country,query"})
-            res = requests.post("http://ip-api.com/batch", json=post)
+
+            try:
+                res = requests.post("http://ip-api.com/batch", json=post)
+            except:
+                print("-- Something went wrong while fetching countries from http://ip-api.com")
+
             sendMail(ips, res.text, counter)
+        else:
+            print("-- Threshold not exceeded")
+            print("-- Failed attempts: {}, Threshold: {}".format(counter, THRESHOLD))
 
 def sendMail(ips, res, counter):
-    smtpObj = smtplib.SMTP('localhost')
+    print("-- Sending email!")
+
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+    except ConnectionRefusedError as er:
+        print("-- Something went wrong!")
+        print("-- {}".format(er))
+        print("-- Make sure the docker-compose provided is up and running the smtp_relay")
+        return
+
     message = MIMEMultipart('alternative')
     message['From'] = "info@brutus.ml"
     message['To'] = EMAIL_RECEIVER
@@ -134,7 +164,22 @@ def sendMail(ips, res, counter):
 
     image.add_header('Content-ID', '<logo>')
     message.attach(image)
-    smtpObj.send_message(message)
+
+    try:
+        smtpObj.send_message(message)
+        print("-- Email sent successfully!")
+    except smtplib.SMTPResponseException as er:
+        eCode = er.smtp_code
+        eMessage = er.smtp_error
+        print("-- Something went wrong!")
+        print("-- Error code: {}".format(eCode))
+        print(eMessage)
+        return
+    except smtplib.SMTPRecipientsRefused as er:
+        print("-- Something went wrong!")
+        print("-- Make sure the email provided on emailDefaults.json is correct")
+        return
+
 
 if __name__ == "__main__":
     readDefaults()
