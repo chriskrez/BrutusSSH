@@ -7,6 +7,7 @@ import os.path
 import re
 import requests
 import smtplib
+import math
 
 MONTHS = {"Jan":"01", "Feb":"02", "Mar":"03", "Apr":"04", "May":"05", "Jun":"06", "Jul":"07", "Aug":"08", "Sep":"09", "Oct": "10", "Nov": "11", "Dec": "12"}
 
@@ -76,16 +77,27 @@ def checkAttack():
 
         if counter >= THRESHOLD:
             print("-- Threshold exceeded")
-            post = []
-            for ip in sorted(ips.items(), key=lambda x: x[1], reverse=True):
-                post.append({"query": ip[0], "fields": "country,query"})
+            iterations = math.ceil(len(ips.items()) / 100)
+            results = []
 
-            try:
+            for i in range(iterations):
+                minV = 100 * i
+                maxV = min(100 * (i + 1), len(ips.items()))
+                post = []
+                for x in list(ips)[minV:maxV]:
+                    post.append({"query": x, "fields": "country,query"})
+            
                 res = requests.post("http://ip-api.com/batch", json=post)
-            except:
-                print("-- Something went wrong while fetching countries from http://ip-api.com")
+                try:
+                    for entry in json.loads(res.text):
+                        results.append(entry)
+                except:
+                    print("-- Something went wrong while fetching countries from http://ip-api.com")
+                    print("-- Try again later")
+                    return
 
-            sendMail(ips, res.text, counter)
+            results.sort(key=lambda x: ips[x["query"]], reverse=True)
+            sendMail(ips, results, counter)
         else:
             print("-- Threshold not exceeded")
             print("-- Failed attempts: {}, Threshold: {}".format(counter, THRESHOLD))
@@ -108,7 +120,7 @@ def sendMail(ips, res, counter):
 
     countries = {}
     records = ""
-    for entry in json.loads(res):
+    for entry in res:
         country = entry["country"]
         ip = entry["query"]
         attempts = ips[ip]
