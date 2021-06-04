@@ -58,8 +58,6 @@ Run the program in `./dist` (**exe** for windows, **AppImage** for linux)
 
 This python script can be placed on a server and used periodically (using a cron job) to notify the owner of the server when failed attempts of login surpass a _threshold_.
 
-A **docker-compose** configuration is provided too in order to run the smtp relay and actually send the email.
-
 The script draws the information needed from the **emailDefaults.json** file which is generated the first time the script runs and needs to be filled by the owner of the server. A template of this file is stated below.
 
 ```
@@ -67,13 +65,15 @@ The script draws the information needed from the **emailDefaults.json** file whi
   "log_path":"/var/log/auth.log",
   "time_window":"5",
   "threshold": "50",
-  "email_receiver": "example@example.com"
+  "email_sender": "example@example.com",
+  "email_receiver": "example@example.com",
+  "gmail_token: "example"
 }
 ```
 
 ### Use
 
-**Step 1**: Download the files (docker-compose, python script, logo) from the `email_attack` folder and place them into your server.
+**Step 1**: Download the files (python script, logo) from the `email_attack` folder and upload them into your server.
 
 **Step 2**: Run the python script to generate the `emailDefaults.json` file or create it on your own as mentioned above.
 
@@ -81,19 +81,21 @@ The script draws the information needed from the **emailDefaults.json** file whi
 - **time_window**: the time period in which every execution of the script will search for failed login attempts on the log file. Example: if time window equals "5" the script will search the last 5 minutes of the logs. This should match the time that the cron job will be repeated.
 - **threshold**: the number of failed login attempts which if
   exceeded the email will be send
-- **email_reciever**: the reciever of the email (should be the administrator of the server)
+- **email_sender**: the sender of the email (an email you have access to)
+- **email_reciever**: the reciever of the email (should be the administrator of the server, can be the same as **email_sender**)
+- **gmail_token**: this gmail token should be generated through your Google Account in order to actually send the email from the provided sender's account. Click [here](https://support.google.com/mail/answer/185833/sign-in-using-app-passwords?hl=en-GB) to learn how to generate your gmail token
 
-**Step 3**: Create a self-signed certificate and place the files `cert.pem` and `key.pem` into the folder of the project.
-
-**Step 4**: A docker-compose file is provided in order to run the email relay. While being on the folder of the project run the following command to run the container in the background.
+The command to run the script should be:
 
 ```
-docker-compose up --detach
+python3 emailAttack.py
 ```
 
-**Step 5**: Create a filter to your email client in order to prevent the mail to be sent to spam folder. The filter should check if the sender's address is `info@brutus.ml` and forward the email to inbox and not spam.
+**Step 3**: Create a cron job that will execute the python script. Make sure to repeat the cron job at the same time period stated as _time_window_ on the emailDefaults.json.
 
-**Step 6**: Create a cron job that will execute the python script. Make sure to repeat the cron job at the same time period stated as _time_window_ on the emailDefaults.json.
+&#x2611; You should use **Python 3** to run the script!
+
+&#x2611; You might need to add **sudo** before the command to run the script as it needs access to the file **/var/log/auth.log**. To run the cron job you should designate this command to be passwordless through **/etc/sudoers** since the cron job cannot prompt for the password.
 
 <hr />
 
