@@ -23,17 +23,21 @@ def readDefaults():
     if os.path.isfile("./emailDefaults.json"):
         with open("emailDefaults.json") as defFile:
             data = json.load(defFile)
-            global LOG_PATH, TIME_WINDOW, THRESHOLD, EMAIL_RECEIVER
+            global LOG_PATH, TIME_WINDOW, THRESHOLD, EMAIL_SENDER, EMAIL_RECEIVER, GMAIL_TOKEN
             LOG_PATH = checkExistingFKey(data, "log_path")
             TIME_WINDOW = int(checkExistingFKey(data, "time_window"))
             THRESHOLD = int(checkExistingFKey(data, "threshold"))
+            EMAIL_SENDER = checkExistingFKey(data, "email_sender")
             EMAIL_RECEIVER = checkExistingFKey(data, "email_receiver")
+            GMAIL_TOKEN = checkExistingFKey(data, "gmail_token")
     else:
         content = {
             "log_path":"/var/log/auth.log",
             "time_window":"5",
             "threshold": "50",
-            "email_receiver": "example@example.com"
+            "email_sender": "example@example.com",
+            "email_receiver": "example@example.com",
+            "gmail_token": "example"
         }
 
         print("Please fill the default values in emailDefaults.json")
@@ -54,7 +58,7 @@ def checkAttack():
 
             if not flag:
                 time = re.split('\s+',line)[:3]
-                time = f"{now.year} {MONTHS[time[0]]} {' '.join(time[1:])}"
+                time = "{} {} {}".format(now.year, MONTHS[time[0]], ' '.join(time[1:]))
                 date = datetime.strptime(time, "%Y %m %d %H:%M:%S")
                 if date >= now:
                     flag = True
@@ -106,7 +110,8 @@ def sendMail(ips, res, counter):
     print("-- Sending email!")
 
     try:
-        smtpObj = smtplib.SMTP('localhost')
+        smtpObj = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        smtpObj.login(EMAIL_SENDER, GMAIL_TOKEN)
     except ConnectionRefusedError as er:
         print("-- Something went wrong!")
         print("-- {}".format(er))
@@ -114,7 +119,7 @@ def sendMail(ips, res, counter):
         return
 
     message = MIMEMultipart('alternative')
-    message['From'] = "info@brutus.ml"
+    message['From'] = EMAIL_SENDER
     message['To'] = EMAIL_RECEIVER
     message['Subject'] = "BrutusSSH Attack Notification"
 
@@ -178,8 +183,8 @@ def sendMail(ips, res, counter):
     message.attach(image)
 
     try:
-        smtpObj.send_message(message)
-        print("-- Email sent successfully!")
+        smtpObj.sendmail(EMAIL_RECEIVER, EMAIL_RECEIVER, message.as_string())
+        smtpObj.quit()
     except smtplib.SMTPResponseException as er:
         eCode = er.smtp_code
         eMessage = er.smtp_error
@@ -191,7 +196,6 @@ def sendMail(ips, res, counter):
         print("-- Something went wrong!")
         print("-- Make sure the email provided on emailDefaults.json is correct")
         return
-
 
 if __name__ == "__main__":
     readDefaults()
